@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>填写收件人信息</title>
+  <link rel="icon" href="/static/favicon.png" >
+  <style>
+    body {
+        background-color:black;
+background-image:
+radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+    }
+    .container {
+      margin: 0 auto;
+      max-width: 600px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+    }
+    form {
+      margin-top: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+      margin-right: 10px;
+      color: #666;
+    }
+    input[type="email"],
+    select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    select {
+      width: 140px;
+      margin-right: 10px;
+    }
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+    /* 添加动画效果 */
+    #district-container {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    #district-container.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>填写收件人信息</h1>
+    <form>
+      <div>
+        <label for="email">收件人邮箱：</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div>
+        <label for="city-select">城市：</label>
+        <select id="city-select" name="city" onchange="showDistricts()">
+          <option value="choose">请选择城市</option>
+          <option value="北京市">北京市</option>
+          <option value="上海市">上海市</option>
+          <option value="重庆市">重庆市</option>
+          <option value="河北省">河北省</option>
+          <option value="江苏省">江苏省</option>
+          <option value="四川省">四川省</option>
+          <option value="浙江省">浙江省</option>
+          <option value="吉林省">吉林省</option>
+          <option value="黑龙江省">黑龙江省</option>
+          <option value="江苏省">江苏省</option>
+          <option value="湖南省">湖南省</option>
+          <!-- 其他城市选项 -->
+        </select>
+        <div id="district-container">
+          <label for="district-select">区县：</label>
+          <select id="district-select" name="district">
+            <option value="choose">请选择区县</option>
+          </select>
+        </div>
+        </select>
+      </div>
+      <div style="text-align: center;">
+        <button type="submit">提交</button>
+      </div>
+    </form>
+  </div>
+  <div id="success-message" style="display: none; text-align: center; color: green; margin-top: 10px;">提交成功！</div>
+  <script>
+    var cities = [
+    { name: "北京市", districts: ["东城区", "西城区", "朝阳区", "海淀区", "丰台区", "石景山区", "门头沟区", "房山区", "通州区", "顺义区", "昌平区", "大兴区", "怀柔区", "平谷区", "密云区", "延庆区"] },
+      { name: "上海市", districts: ["黄浦区", "徐汇区", "长宁区", "静安区", "普陀区", "虹口区", "杨浦区", "闵行区", "宝山区", "嘉定区", "浦东新区", "金山区", "松江区", "青浦区", "奉贤区", "崇明区"] },
+      { name: "重庆市", districts: ["万州区", "涪陵区", "渝中区", "大渡口区", "江北区", "沙坪坝区", "九龙坡区", "南岸区", "北碚区", "綦江区", "大足区", "渝北区", "巴南区", "黔江区", "长寿区", "江津区", "合川区", "永川区", "南川区", "璧山区", "铜梁区", "潼南区", "荣昌区", "开州区", "梁平区", "武隆区", "城口县", "丰都县", "垫江县", "忠县", "云阳县", "奉节县", "巫山县", "巫溪县", "石柱土家族自治县", "秀山土家族苗族自治县", "酉阳土家族苗族自治县", "彭水苗族土家族自治县"] },
+      { name: "河北省", districts: ["石家庄市", "唐山市", "秦皇岛市", "邯郸市", "邢台市", "保定市", "张家口市", "承德市", "沧州市", "廊坊市", "衡水市"] },
+      { name: "江苏省", districts: ["南京市", "无锡市", "徐州市", "常州市", "苏州市", "南通市", "连云港市", "淮安市", "盐城市", "扬州市", "镇江市", "泰州市", "宿迁市"] },
+      { name: "四川省", districts: ["成都市", "自贡市", "攀枝花市", "泸州市", "德阳市", "绵阳市", "广元市", "遂宁市", "内江市", "乐山市", "南充市", "眉山市", "宜宾市", "广安市", "达州市", "雅安市", "巴中市", "资阳市", "阿坝藏族羌族自治州", "甘孜藏族自治州", "凉山彝族自治州"] },
+      { name: "浙江省", districts:  ['杭州市', '宁波市', '温州市', '嘉兴市', '湖州市', '绍兴市', '金华市', '衢州市', '舟山市', '台州市', '丽水市'] },
+      { name:"吉林省",districts:  ['长春市', '吉林市', '四平市', '辽源市', '通化市', '白山市', '松原市', '白城市', '延边朝鲜族自治州']},
+       { name: "黑龙江省",districts:  ['哈尔滨市', '齐齐哈尔市', '鸡西市', '鹤岗市', '双鸭山市', '大庆市', '伊春市', '佳木斯市', '七台河市', '牡丹江市', '黑河市', '绥化市', '大兴安岭地区']},
+        {name: "江苏省",districts: ['南京市', '无锡市', '徐州市', '常州市', '苏州市', '南通市', '连云港市', '淮安市', '盐城市', '扬州市', '镇江市', '泰州市', '宿迁市']},
+        {name: "湖南省",districts : ['长沙市', '株洲市', '湘潭市', '衡阳市', '邵阳市', '岳阳市', '常德市', '张家界市', '益阳市', '郴州市', '永州市', '怀化市', '娄底市', '湘西土家族苗族自治州']},
+      // 其他城市数据
+    ];
+
+    function showDistricts() {
+      var citySelect = document.getElementById("city-select");
+      var districtContainer = document.getElementById("district-container");
+      var districtSelect = document.getElementById("district-select");
+      var city = citySelect.value;
+      if (city === "choose") {
+        districtSelect.innerHTML = "<option value='choose'>请选择区县</option>";
+        districtContainer.classList.remove("show");
+      } else {
+        var districts = cities.find(c => c.name === city).districts;
+        var options = "<option value='choose'>请选择区县</option>";
+        for (var i = 0; i < districts.length; i++) {
+          options += "<option value='" + districts[i] + "'>" + districts[i] + "</option>";
+        }
+        districtSelect.innerHTML = options;
+        districtContainer.classList.add("show");
+      }
+    }
+    var form = document.querySelector('form');
+form.addEventListener('submit', function(event) {
+  event.preventDefault(); // 阻止表单默认提交行为
+  var email = document.getElementById('email').value;
+  var city = document.getElementById('city-select').value;
+  var district = document.getElementById('district-select').value;
+  if (city === "choose") { // 如果城市的值为空，弹出提示框并返回
+    alert("请选择城市！");
+    return;
+  }
+  var formData = new FormData();
+  formData.append('email', email);
+  formData.append('city', city);
+  formData.append('district', district);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'http://localhost:8080/submit');
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        document.getElementById("success-message").style.display = "block";
+        setTimeout(function() {
+          document.getElementById("success-message").style.display = "none";
+          location.reload(); // 刷新页面
+        }, 1000); // 3秒钟后隐藏提示消息
+      } else {
+        alert('提交失败，请稍后再试！');
+      }
+    }
+  };
+  xhr.send(new URLSearchParams(formData).toString());
+});
+  </script>
+</body>
+</html>
