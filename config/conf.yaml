@@ -1,0 +1,10 @@
+mysql:
+      dns: 登录用户名(默认root):密码@tcp(MySQL的ip:3306)/weather?charset=utf8mb4&parseTime=True&loc=Local
+smtp:
+    user: 发送邮箱的账号
+    pass: 邮箱授权码
+    host: smtp.163.com
+    port: 25
+    
+weather:
+      key: 高德申请的key值
